@@ -1,0 +1,41 @@
+'rozbicie na M/Q/Y
+    lastRow = head_row_rozbicie_alg
+    fromdate = DateValue(dostawa_od)
+    todate = DateValue(dostawa_do)
+    currentMonth = fromdate
+    Do While currentMonth <= todate
+        Select Case UCase(znacznik_rozbicia)
+            Case "M"
+                alg_from_date = CDate(currentMonth)
+                
+                If CDate(Application.WorksheetFunction.EoMonth(currentMonth, 0)) <= todate Then
+                    alg_to_date = CDate(Application.WorksheetFunction.EoMonth(currentMonth, 0))
+                Else: alg_to_date = todate
+                End If
+
+                currentMonth = Application.WorksheetFunction.EoMonth(currentMonth, 0) + 1
+                
+            Case "Y"
+                alg_from_date = CDate(currentMonth)
+                
+                If CDate(DateSerial(Year(currentMonth), 12, 31)) <= todate Then
+                    alg_to_date = CDate(DateSerial(Year(currentMonth), 12, 31))
+                Else: alg_to_date = todate
+                End If
+
+                currentMonth = DateSerial(Year(currentMonth) + 1, 1, 1)
+            Case "Q"
+                alg_from_date = CDate(currentMonth)
+                
+                If CDate(DateSerial(Year(currentMonth), Month(currentMonth) + 3, 0)) <= todate Then
+                    alg_to_date = CDate(DateSerial(Year(currentMonth), Month(currentMonth) + 3, 0))
+                Else: alg_to_date = todate
+                End If
+
+                currentMonth = DateSerial(Year(currentMonth), Month(currentMonth) + 3, 1)
+
+        End Select
+        .Cells(lastRow + 1, 1).Value = alg_from_date
+        .Cells(lastRow + 1, 2).Value = alg_to_date
+    lastRow = lastRow + 1
+    Loop
